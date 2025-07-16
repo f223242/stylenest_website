@@ -11,7 +11,8 @@ const products: Product[] = [
   {
     id: '1',
     name: 'Classic White Tee',
-    price: 3500,
+    price: 2800, // Sale price
+    originalPrice: 3500, // Original price
     image: '/images/classic-white-tee.png',
     description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
@@ -29,7 +30,8 @@ const products: Product[] = [
   {
     id: '3',
     name: 'Sage Green Hoodie',
-    price: 7000,
+    price: 6000, // Sale price
+    originalPrice: 7000, // Original price
     image: '/images/sage-green-hoodie.png',
     description: 'Stay cozy in our signature sage green hoodie. Made from a soft fleece blend, it features a relaxed fit and a minimalist design.',
     sizes: ['S', 'M', 'L', 'XL'],
@@ -65,7 +67,8 @@ const products: Product[] = [
   {
     id: '7',
     name: 'Canvas Tote Bag',
-    price: 3000,
+    price: 2500, // Sale price
+    originalPrice: 3000, // Original price
     image: '/images/canvas-tote-bag.png',
     description: 'A sturdy and stylish canvas tote bag, perfect for daily use. Features our subtle "Thread Canvas" logo.',
     sizes: ['One Size'],
