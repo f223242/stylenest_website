@@ -1,23 +1,11 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import { getStyleSuggestions, type StyleSuggestionsInput } from '@/ai/flows/style-suggestions';
 import { useCart } from '@/context/cart-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wand2 } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
-
-async function getSuggestionsAction(input: StyleSuggestionsInput): Promise<string[]> {
-  'use server';
-  if (input.cartItems.length === 0) return [];
-  try {
-    const result = await getStyleSuggestions(input);
-    return result.suggestions;
-  } catch (error) {
-    console.error('Error getting style suggestions:', error);
-    return [];
-  }
-}
+import { getSuggestionsAction } from '@/app/actions';
 
 export default function StyleSuggestions() {
   const { cart } = useCart();
