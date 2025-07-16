@@ -36,7 +36,8 @@ export default function CartPage() {
                   <Image
                     src={item.product.image}
                     alt={item.product.name}
-                    fill
+                    width={96}
+                    height={96}
                     className="object-cover"
                     data-ai-hint={`${item.product.category} ${item.product.name.split(' ').slice(0,1).join(' ')}`}
                   />
@@ -44,7 +45,7 @@ export default function CartPage() {
                 <div className="flex-grow">
                   <h2 className="font-bold">{item.product.name}</h2>
                   <p className="text-sm text-muted-foreground">Size: {item.size}</p>
-                  <p className="text-sm font-bold text-primary">${item.product.price.toFixed(2)}</p>
+                  <p className="text-sm font-bold text-primary">PKR {item.product.price.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1)}>
@@ -70,7 +71,7 @@ export default function CartPage() {
               <CardContent className="space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>PKR {subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -78,7 +79,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t">
                   <span>Total</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>PKR {subtotal.toFixed(2)}</span>
                 </div>
               </CardContent>
               <CardFooter>

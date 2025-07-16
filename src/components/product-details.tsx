@@ -51,7 +51,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           <h1 className="text-4xl lg:text-5xl font-bold">{product.name}</h1>
         </div>
         <p className="text-lg text-foreground">{product.description}</p>
-        <p className="text-3xl font-bold text-primary">${product.price.toFixed(2)}</p>
+        <p className="text-3xl font-bold text-primary">PKR {product.price.toFixed(2)}</p>
         <div className="flex items-center gap-4">
           <Select value={selectedSize} onValueChange={setSelectedSize}>
             <SelectTrigger className="w-[180px]">
