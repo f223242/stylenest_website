@@ -676,7 +676,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 
 export const metadata: Metadata = {
-  title: 'Thread Canvas',
+  title: 'StyleNest',
   description: 'A modern e-commerce website for an online clothes store.',
 };
 
@@ -729,7 +729,7 @@ export default function Home() {
     <div className="space-y-12">
       <section className="text-center bg-card p-12 rounded-lg shadow-sm">
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground bg-primary inline-block px-4 py-2 rounded-md mb-4">
-          Thread Canvas
+          StyleNest
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
           Discover curated collections where style meets comfort. Your new favorite outfit awaits.
@@ -781,7 +781,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   return {
-    title: `${product.name} | Thread Canvas`,
+    title: `${product.name} | StyleNest`,
     description: product.description,
   };
 }
@@ -817,7 +817,7 @@ export default function Footer() {
             <NewsletterSignup />
             <div className="text-center md:text-right">
                  <p className="text-sm text-muted-foreground">
-                    © {new Date().getFullYear()} Thread Canvas. All Rights Reserved.
+                    © {new Date().getFullYear()} StyleNest. All Rights Reserved.
                 </p>
             </div>
         </div>
@@ -858,7 +858,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <Link href="/" className="text-2xl font-headline font-bold text-primary">
-              Thread Canvas
+              StyleNest
             </Link>
             <nav className="hidden md:flex items-center space-x-4">
               {categories.map((category) => (
@@ -5602,7 +5602,7 @@ const products: Product[] = [
     price: 2500, // Sale price
     originalPrice: 3000, // Original price
     image: '/images/canvas-tote-bag.png',
-    description: 'A sturdy and stylish canvas tote bag, perfect for daily use. Features our subtle "Thread Canvas" logo.',
+    description: 'A sturdy and stylish canvas tote bag, perfect for daily use. Features our subtle "StyleNest" logo.',
     sizes: ['One Size'],
     category: 'Accessories',
   },

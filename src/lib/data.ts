@@ -70,7 +70,7 @@ const products: Product[] = [
     price: 2500, // Sale price
     originalPrice: 3000, // Original price
     image: '/images/canvas-tote-bag.png',
-    description: 'A sturdy and stylish canvas tote bag, perfect for daily use. Features our subtle "Thread Canvas" logo.',
+    description: 'A sturdy and stylish canvas tote bag, perfect for daily use. Features our subtle "StyleNest" logo.',
     sizes: ['One Size'],
     category: 'Accessories',
   },

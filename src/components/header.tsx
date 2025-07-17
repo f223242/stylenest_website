@@ -23,7 +23,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <Link href="/" className="text-2xl font-headline font-bold text-primary">
-              Thread Canvas
+              StyleNest
             </Link>
             <nav className="hidden md:flex items-center space-x-4">
               {categories.map((category) => (
