@@ -4,8 +4,8 @@ import { getProducts } from '@/lib/data';
 import ProductCard from '@/components/product-card';
 import { ArrowRight } from 'lucide-react';
 
-export default function Home() {
-  const products = getProducts();
+export default async function Home() {
+  const products = await getProducts();
   const featuredProducts = products.slice(0, 4);
 
   return (

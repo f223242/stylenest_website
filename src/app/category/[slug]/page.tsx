@@ -8,13 +8,13 @@ interface CategoryPageProps {
   };
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const category = getCategoryBySlug(params.slug);
   if (!category) {
     notFound();
   }
 
-  const products = getProducts(params.slug);
+  const products = await getProducts(params.slug);
 
   return (
     <div className="space-y-8">
@@ -27,7 +27,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground">No products found in this category.</p>
+        <p className="text-muted-foreground">No products found in this category. Make sure you have added them to your Firestore database.</p>
       )}
     </div>
   );
