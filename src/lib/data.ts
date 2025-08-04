@@ -13,7 +13,7 @@ const categories: Category[] = [
 // You can go to your Firebase Console > Firestore Database to add/edit products.
 // The old hardcoded product list is below for your reference.
 
-/*
+
 const products: Product[] = [
   {
     id: '1',
@@ -25,9 +25,19 @@ const products: Product[] = [
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     category: 'Tops',
   },
+  {
+    id: '2',
+    name: 'Classic White Tee',
+    price: 2800, // Sale price
+    originalPrice: 3500, // Original price
+    image: '/images/classic-white-tee.png',
+    description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    category: 'Tops',
+  },
   // ... other products
 ];
-*/
+
 
 export const getProducts = async (categorySlug?: string): Promise<Product[]> => {
   const productsCollection = collection(db, 'products');
