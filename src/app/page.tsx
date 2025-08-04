@@ -12,7 +12,7 @@ export default async function Home() {
     <div className="space-y-12">
       <section className="text-center bg-card p-12 rounded-lg shadow-sm">
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground bg-primary inline-block px-4 py-2 rounded-md mb-4">
-          StyleNest
+          Thread Canvas
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
           Discover curated collections where style meets comfort. Your new favorite outfit awaits.
@@ -26,11 +26,15 @@ export default async function Home() {
 
       <section>
         <h2 className="text-3xl font-bold tracking-tight mb-6">Featured Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {featuredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {featuredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {featuredProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+           <p className="text-muted-foreground">No featured products found. Make sure you have added them to your Firestore database.</p>
+        )}
       </section>
     </div>
   );

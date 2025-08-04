@@ -1,6 +1,6 @@
 import { type Product, type Category } from './types';
 import { db } from './firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
 
 const categories: Category[] = [
   { name: 'All', slug: 'all' },
@@ -9,50 +9,38 @@ const categories: Category[] = [
   { name: 'Accessories', slug: 'accessories' },
 ];
 
-// The products are now fetched from Firestore.
-// You can go to your Firebase Console > Firestore Database to add/edit products.
-// The old hardcoded product list is below for your reference.
-
-
-const products: Product[] = [
-  {
-    id: '1',
-    name: 'Classic White Tee',
-    price: 2800, // Sale price
-    originalPrice: 3500, // Original price
-    image: '/images/classic-white-tee.png',
-    description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    category: 'Tops',
-  },
-  {
-    id: '2',
-    name: 'Classic White Tee',
-    price: 2800, // Sale price
-    originalPrice: 3500, // Original price
-    image: '/images/classic-white-tee.png',
-    description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    category: 'Tops',
-  },
-  // ... other products
-];
-
-
 export const getProducts = async (categorySlug?: string): Promise<Product[]> => {
   const productsCollection = collection(db, 'products');
-  const productsSnapshot = await getDocs(productsCollection);
-  const productsList = productsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Product));
+  let productsQuery;
 
   if (categorySlug && categorySlug !== 'all') {
-    return productsList.filter(p => p.category.toLowerCase() === categorySlug);
+    // Note: Firestore queries are case-sensitive. Ensure the category in the database matches.
+    // For this to work, you may need to create an index in Firestore. 
+    // The console will provide a link to create it if it's missing.
+    const categoryName = categories.find(c => c.slug === categorySlug)?.name;
+    if (categoryName) {
+        productsQuery = query(productsCollection, where("category", "==", categoryName));
+    } else {
+        return []; // Or handle as a "not found" case
+    }
+  } else {
+    productsQuery = query(productsCollection);
   }
+
+  const productsSnapshot = await getDocs(productsQuery);
+  const productsList = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
   return productsList;
 };
 
 export const getProductById = async (id: string): Promise<Product | undefined> => {
-  const products = await getProducts();
-  return products.find(p => p.id === id);
+  const docRef = doc(db, "products", id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() } as Product;
+  } else {
+    return undefined;
+  }
 };
 
 export const getCategories = (): Category[] => {

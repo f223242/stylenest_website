@@ -8,7 +8,7 @@ export default function Footer() {
             <NewsletterSignup />
             <div className="text-center md:text-right">
                  <p className="text-sm text-muted-foreground">
-                    © {new Date().getFullYear()} StyleNest. All Rights Reserved.
+                    © {new Date().getFullYear()} Thread Canvas. All Rights Reserved.
                 </p>
             </div>
         </div>
