@@ -8,13 +8,13 @@ interface CategoryPageProps {
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default function CategoryPage({ params }: CategoryPageProps) {
   const category = getCategoryBySlug(params.slug);
   if (!category) {
     notFound();
   }
 
-  const products = await getProducts(category.name === 'All' ? 'all' : category.name);
+  const products = getProducts(params.slug);
 
   return (
     <div className="space-y-8">

@@ -7,11 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/context/cart-context';
 import { useToast } from '@/hooks/use-toast';
-import { saveOrderAction, type ShippingInfo } from '@/app/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 const shippingSchema = z.object({
@@ -22,10 +20,11 @@ const shippingSchema = z.object({
   zip: z.string().min(1, "ZIP code is required"),
 });
 
+type ShippingInfo = z.infer<typeof shippingSchema>;
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
   const { toast } = useToast();
 
   const form = useForm<ShippingInfo>({
@@ -39,7 +38,7 @@ export default function CheckoutPage() {
     }
   });
 
-  const onSubmit = async (data: ShippingInfo) => {
+  const onSubmit = (data: ShippingInfo) => {
     if (cart.length === 0) {
       toast({
         title: 'Your cart is empty',
@@ -49,16 +48,39 @@ export default function CheckoutPage() {
       return;
     }
 
-    try {
-      await saveOrderAction(data, cart);
-      router.push('/checkout/success');
-    } catch (error) {
-      toast({
-        title: 'Order Failed',
-        description: 'There was a problem placing your order. Please try again.',
-        variant: 'destructive',
-      });
-    }
+    // IMPORTANT: Replace this with your actual email address
+    const recipientEmail = "your-email@example.com"; 
+    const subject = "New Order from StyleNest";
+    
+    const cartDetails = cart.map(item => 
+      `Product: ${item.product.name}\nSize: ${item.size}\nQuantity: ${item.quantity}\nPrice: PKR ${item.product.price.toFixed(2)}`
+    ).join('\n\n');
+
+    const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+    const body = `
+New Order Details:
+
+--- SHIPPING INFORMATION ---
+Name: ${data.firstName} ${data.lastName}
+Address: ${data.address}
+City: ${data.city}
+ZIP: ${data.zip}
+
+--- ORDER SUMMARY ---
+${cartDetails}
+
+-----------------------------
+Total: PKR ${subtotal.toFixed(2)}
+    `;
+
+    const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Open the user's default email client
+    window.location.href = mailtoLink;
+
+    // Redirect to a success page after attempting to open mail client
+    router.push('/checkout/success');
   };
 
 
@@ -148,26 +170,10 @@ export default function CheckoutPage() {
 
               <Separator className="my-6" />
 
-              <h3 className="text-lg font-semibold">Payment Details</h3>
-              <p className="text-sm text-muted-foreground">This is a mock checkout. No real payment will be processed.</p>
+              <p className="text-sm text-muted-foreground">Clicking the button below will open your default email client to send the order details to us.</p>
               
-              <div className="space-y-2">
-                <Label htmlFor="card-number">Card Number</Label>
-                <Input id="card-number" placeholder="**** **** **** 1234" disabled />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                  <Label htmlFor="expiry">Expiry Date</Label>
-                  <Input id="expiry" placeholder="MM/YY" disabled />
-                </div>
-                 <div className="space-y-2">
-                  <Label htmlFor="cvc">CVC</Label>
-                  <Input id="cvc" placeholder="123" disabled />
-                </div>
-              </div>
-              
-              <Button type="submit" size="lg" className="w-full" disabled={form.formState.isSubmitting}>
-                 {form.formState.isSubmitting ? 'Placing Order...' : 'Place Order'}
+              <Button type="submit" size="lg" className="w-full">
+                 Send Order via Email
               </Button>
             </form>
           </Form>
