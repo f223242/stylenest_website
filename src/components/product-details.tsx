@@ -59,7 +59,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </div>
         <p className="text-lg text-foreground">{product.description}</p>
         <div className="flex items-baseline gap-4">
-          <p className={`text-3xl font-bold ${isOnSale ? 'text-destructive' : 'text-primary'}`}>
+          <p className={`text-4xl font-bold ${isOnSale ? 'text-destructive' : 'text-primary'}`}>
             PKR {product.price.toFixed(2)}
           </p>
           {isOnSale && (
