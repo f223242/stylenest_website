@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
-      <section className="text-center bg-card p-12 rounded-lg shadow-sm">
+      <section className="text-center bg-secondary p-12 rounded-lg shadow-sm">
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground bg-primary inline-block px-4 py-2 rounded-md mb-4">
           StyleNest
         </h1>
@@ -19,7 +19,7 @@ export default function Home() {
         </p>
         <Button asChild size="lg">
           <Link href="/category/all">
-            Shop All Collections <ArrowRight className="ml-2" />
+            View All Collections <ArrowRight className="ml-2" />
           </Link>
         </Button>
       </section>
