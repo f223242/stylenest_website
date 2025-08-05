@@ -11,34 +11,26 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
-      <section className="relative text-center bg-secondary p-12 rounded-lg shadow-sm overflow-hidden">
-        <div className="absolute inset-0 z-0">
-            <Image
-                src="https://placehold.co/800x600.png"
-                alt="Stylish man"
-                fill
-                className="object-cover opacity-15 blur-sm"
-                data-ai-hint="modern menswear"
-            />
-            <Image
-                src="https://placehold.co/800x600.png"
-                alt="Stylish woman"
-                fill
-                className="object-cover opacity-15 blur-sm"
-                data-ai-hint="modern womenswear"
-            />
-        </div>
-        <div className="relative z-10">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground bg-primary/80 backdrop-blur-sm inline-block px-4 py-2 rounded-md mb-4">
-            StyleNest
+      <section className="relative text-left p-12 rounded-lg shadow-sm overflow-hidden min-h-[400px] flex items-center">
+        <Image
+            src="https://placehold.co/1200x400.png"
+            alt="Fashion models"
+            fill
+            className="object-cover"
+            data-ai-hint="fashion editorial"
+        />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 text-white max-w-xl">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-4">
+                StyleNest
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8 bg-background/50 backdrop-blur-sm rounded-md p-2">
-            Discover curated collections where style meets comfort. Your new favorite outfit awaits.
+            <p className="text-xl max-w-lg mb-8">
+                Discover curated collections where style meets comfort. Your new favorite outfit awaits.
             </p>
-            <Button asChild size="lg">
-            <Link href="/category/all">
-                View All Collections <ArrowRight className="ml-2" />
-            </Link>
+            <Button asChild size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-black">
+                <Link href="/category/all">
+                    View All Collections <ArrowRight className="ml-2" />
+                </Link>
             </Button>
         </div>
       </section>
