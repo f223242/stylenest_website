@@ -27,9 +27,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updatedCart[existingItemIndex].quantity += 1;
         return updatedCart;
       } else {
-        // When adding a new item, we create a plain object that can be serialized
-        const newProduct = { ...product };
-        return [...prevCart, { product: newProduct, size, quantity: 1 }];
+        return [...prevCart, { product, size, quantity: 1 }];
       }
     });
   };
@@ -47,14 +45,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart(productId, size);
       return;
     }
-    setCart((prevCart) => {
-      return prevCart.map((item) => {
-        if (item.product.id === productId && item.size === size) {
-          return { ...item, quantity };
-        }
-        return item;
-      });
-    });
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.product.id === productId && item.size === size
+          ? { ...item, quantity }
+          : item
+      )
+    );
   };
   
   const clearCart = () => {
