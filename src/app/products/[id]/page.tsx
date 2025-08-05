@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   return {
-    title: `${product.name} | Thread Canvas`,
+    title: `${product.name} | StyleNest`,
     description: product.description,
   };
 }

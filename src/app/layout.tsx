@@ -7,7 +7,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 
 export const metadata: Metadata = {
-  title: 'Thread Canvas',
+  title: 'StyleNest',
   description: 'A modern e-commerce website for an online clothes store.',
 };
 
