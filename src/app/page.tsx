@@ -13,7 +13,7 @@ export default function Home() {
     <div className="space-y-12">
       <section className="relative text-left p-12 rounded-lg shadow-sm overflow-hidden min-h-[400px] flex items-center">
         <Image
-            src="https://placehold.co/1200x400.png"
+            src="https://storage.googleapis.com/project-chat-prod-images/images/p0k270yv1r07u9.png"
             alt="Fashion models"
             fill
             className="object-cover"
