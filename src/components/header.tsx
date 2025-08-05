@@ -22,7 +22,7 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="text-2xl font-headline font-bold text-primary">
+            <Link href="/" className="text-2xl font-headline font-bold text-accent-foreground">
               Thread Canvas
             </Link>
             <nav className="hidden md:flex items-center space-x-4">
@@ -56,7 +56,7 @@ export default function Header() {
               <Link href="/cart">
                 <ShoppingCart className="h-6 w-6" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-foreground text-background text-xs">
                     {cartItemCount}
                   </span>
                 )}

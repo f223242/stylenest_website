@@ -40,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
         <div className="flex items-baseline gap-2">
-          <p className={`text-xl font-bold ${isOnSale ? 'text-destructive' : 'text-primary'}`}>
+          <p className={`text-xl font-bold ${isOnSale ? 'text-destructive' : 'text-accent-foreground'}`}>
             PKR {product.price.toFixed(2)}
           </p>
           {isOnSale && (
@@ -49,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </p>
           )}
         </div>
-        <Button asChild variant="secondary">
+        <Button asChild>
           <Link href={`/products/${product.id}`}>View Details</Link>
         </Button>
       </CardFooter>

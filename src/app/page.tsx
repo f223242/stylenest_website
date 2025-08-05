@@ -11,8 +11,8 @@ export default function Home() {
   return (
     <div className="space-y-12">
       <section className="text-center bg-card p-12 rounded-lg shadow-sm">
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground bg-primary inline-block px-4 py-2 rounded-md mb-4">
-          StyleNest
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground bg-accent inline-block px-4 py-2 rounded-md mb-4">
+          Thread Canvas
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
           Discover curated collections where style meets comfort. Your new favorite outfit awaits.
