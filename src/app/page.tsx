@@ -19,7 +19,7 @@ export default function Home() {
             className="object-cover"
             data-ai-hint="fashion editorial"
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 text-white max-w-xl">
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-4">
                 StyleNest
