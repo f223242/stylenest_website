@@ -115,6 +115,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 };
@@ -370,7 +376,7 @@ export default function CartPage() {
                 <div className="flex-grow">
                   <h2 className="font-bold">{item.product.name}</h2>
                   <p className="text-sm text-muted-foreground">Size: {item.size}</p>
-                  <p className="text-sm font-bold text-primary">PKR {item.product.price.toFixed(2)}</p>
+                  <p className="text-sm font-bold text-primary-foreground">PKR {item.product.price.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1)}>
@@ -423,6 +429,7 @@ export default function CartPage() {
     </div>
   );
 }
+
 ```
 
 ---
@@ -473,14 +480,92 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 ## File: src/app/checkout/page.tsx
 
 ```tsx
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { useCart } from '@/context/cart-context';
+import { useToast } from '@/hooks/use-toast';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+
+const shippingSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  address: z.string().min(1, "Address is required"),
+  city: z.string().min(1, "City is required"),
+  zip: z.string().min(1, "ZIP code is required"),
+});
+
+type ShippingInfo = z.infer<typeof shippingSchema>;
 
 export default function CheckoutPage() {
+  const router = useRouter();
+  const { cart, clearCart } = useCart();
+  const { toast } = useToast();
+
+  const form = useForm<ShippingInfo>({
+    resolver: zodResolver(shippingSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      address: '',
+      city: '',
+      zip: '',
+    }
+  });
+
+  const onSubmit = (data: ShippingInfo) => {
+    if (cart.length === 0) {
+      toast({
+        title: 'Your cart is empty',
+        description: 'Please add items to your cart before checking out.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // IMPORTANT: Replace this with your actual email address
+    const recipientEmail = "your-email@example.com"; 
+    const subject = "New Order from StyleNest";
+    
+    const cartDetails = cart.map(item => 
+      `Product: ${item.product.name}\nSize: ${item.size}\nQuantity: ${item.quantity}\nPrice: PKR ${item.product.price.toFixed(2)}`
+    ).join('\n\n');
+
+    const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+    const body = `
+New Order Details:
+
+--- SHIPPING INFORMATION ---
+Name: ${data.firstName} ${data.lastName}
+Address: ${data.address}
+City: ${data.city}
+ZIP: ${data.zip}
+
+--- ORDER SUMMARY ---
+${cartDetails}
+
+-----------------------------
+Total: PKR ${subtotal.toFixed(2)}
+    `;
+
+    const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Open the user's default email client
+    window.location.href = mailtoLink;
+
+    // Redirect to a success page after attempting to open mail client
+    router.push('/checkout/success');
+  };
+
+
   return (
     <div className="max-w-2xl mx-auto">
       <h1 className="text-4xl font-bold mb-8">Checkout</h1>
@@ -489,61 +574,97 @@ export default function CheckoutPage() {
           <CardTitle>Shipping Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="first-name">First Name</Label>
-                <Input id="first-name" placeholder="John" />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="last-name">Last Name</Label>
-                <Input id="last-name" placeholder="Doe" />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="123 Main St" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-3 gap-4">
+                 <div className="space-y-2 col-span-2">
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>City</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Anytown" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                 </div>
+                 <div className="space-y-2">
+                    <FormField
+                      control={form.control}
+                      name="zip"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ZIP Code</FormLabel>
+                          <FormControl>
+                            <Input placeholder="12345" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                 </div>
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Input id="address" placeholder="123 Main St" />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-               <div className="space-y-2 col-span-2">
-                <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="Anytown" />
-              </div>
-               <div className="space-y-2">
-                <Label htmlFor="zip">ZIP Code</Label>
-                <Input id="zip" placeholder="12345" />
-              </div>
-            </div>
 
-            <Separator className="my-6" />
+              <Separator className="my-6" />
 
-            <h3 className="text-lg font-semibold">Payment Details</h3>
-            <p className="text-sm text-muted-foreground">This is a mock checkout. No real payment will be processed.</p>
-            
-            <div className="space-y-2">
-              <Label htmlFor="card-number">Card Number</Label>
-              <Input id="card-number" placeholder="**** **** **** 1234" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-               <div className="space-y-2">
-                <Label htmlFor="expiry">Expiry Date</Label>
-                <Input id="expiry" placeholder="MM/YY" />
-              </div>
-               <div className="space-y-2">
-                <Label htmlFor="cvc">CVC</Label>
-                <Input id="cvc" placeholder="123" />
-              </div>
-            </div>
-            
-            <Button type="submit" size="lg" className="w-full" asChild>
-              <Link href="/checkout/success">Place Mock Order</Link>
-            </Button>
-          </form>
+              <p className="text-sm text-muted-foreground">Clicking the button below will open your default email client to send the order details to us.</p>
+              
+              <Button type="submit" size="lg" className="w-full">
+                 Send Order via Email
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>
   );
 }
+
 ```
 
 ---
@@ -564,15 +685,16 @@ export default function CheckoutSuccessPage() {
   const { clearCart } = useCart();
 
   useEffect(() => {
+    // We clear the cart after the user has been sent to their email client
     clearCart();
   }, [clearCart]);
 
   return (
     <div className="flex flex-col items-center justify-center text-center py-16">
       <CheckCircle className="w-24 h-24 text-green-500 mb-6" />
-      <h1 className="text-4xl font-bold mb-4">Thank You for Your Order!</h1>
+      <h1 className="text-4xl font-bold mb-4">Thank You!</h1>
       <p className="text-lg text-muted-foreground max-w-md mb-8">
-        Your order has been placed successfully. A confirmation email has been sent to you (not really, this is a mock).
+        Please complete sending the email to place your order. We will process it as soon as we receive it.
       </p>
       <Button asChild size="lg">
         <Link href="/category/all">Continue Shopping</Link>
@@ -580,6 +702,56 @@ export default function CheckoutSuccessPage() {
     </div>
   );
 }
+
+```
+
+---
+---
+
+## File: src/app/contact/page.tsx
+
+```tsx
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Mail, Phone } from 'lucide-react';
+
+export default function ContactPage() {
+  return (
+    <div className="max-w-2xl mx-auto">
+      <h1 className="text-4xl font-bold mb-8 text-center">Contact Us</h1>
+      <p className="text-center text-lg text-muted-foreground mb-12">
+        We'd love to hear from you! Whether you have a question about our products, an order, or anything else, our team is ready to answer all your questions.
+      </p>
+      <Card>
+        <CardHeader>
+          <CardTitle>Get in Touch</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center gap-4">
+            <Mail className="w-8 h-8 text-primary" />
+            <div>
+              <h3 className="text-lg font-semibold">Email</h3>
+              <a href="mailto:your-email@example.com" className="text-muted-foreground hover:underline">
+                your-email@example.com
+              </a>
+              <p className="text-sm text-muted-foreground">We'll get back to you within 24 hours.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <Phone className="w-8 h-8 text-primary" />
+            <div>
+              <h3 className="text-lg font-semibold">Phone</h3>
+              <a href="tel:+1234567890" className="text-muted-foreground hover:underline">
+                +1 (234) 567-890
+              </a>
+               <p className="text-sm text-muted-foreground">Mon - Fri, 9am - 5pm</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 ```
 
 ---
@@ -594,25 +766,25 @@ export default function CheckoutSuccessPage() {
 
 @layer base {
   :root {
-    --background: 0 0% 96.1%; /* #F5F5F5 */
-    --foreground: 0 0% 3.9%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 140 9% 72%; /* #B2BEB5 */
-    --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 29%; /* #4A4A4A */
-    --accent-foreground: 0 0% 98%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 210 40% 96.1%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 98%;
+    --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 140 9% 72%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -621,25 +793,25 @@ export default function CheckoutSuccessPage() {
     --radius: 0.5rem;
   }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 140 5% 45%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 10%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 32.6% 17.5%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 140 5% 45%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -659,6 +831,7 @@ export default function CheckoutSuccessPage() {
     @apply font-headline;
   }
 }
+
 ```
 
 ---
@@ -707,6 +880,7 @@ export default function RootLayout({
     </html>
   );
 }
+
 ```
 
 ---
@@ -717,6 +891,7 @@ export default function RootLayout({
 ```tsx
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getProducts } from '@/lib/data';
 import ProductCard from '@/components/product-card';
 import { ArrowRight } from 'lucide-react';
@@ -727,18 +902,28 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
-      <section className="text-center bg-card p-12 rounded-lg shadow-sm">
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground bg-primary inline-block px-4 py-2 rounded-md mb-4">
-          StyleNest
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Discover curated collections where style meets comfort. Your new favorite outfit awaits.
-        </p>
-        <Button asChild size="lg">
-          <Link href="/category/all">
-            Shop All Collections <ArrowRight className="ml-2" />
-          </Link>
-        </Button>
+      <section className="relative text-left p-12 rounded-lg shadow-sm overflow-hidden min-h-[400px] flex items-center">
+        <Image
+            src="https://storage.googleapis.com/project-chat-prod-images/images/p0k270yv1r07u9.png"
+            alt="Fashion models"
+            fill
+            className="object-cover"
+            data-ai-hint="fashion editorial"
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 text-white max-w-xl">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-4">
+                StyleNest
+            </h1>
+            <p className="text-xl max-w-lg mb-8">
+                Discover curated collections where style meets comfort. Your new favorite outfit awaits.
+            </p>
+            <Button asChild size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-black">
+                <Link href="/category/all">
+                    View All Collections <ArrowRight className="ml-2" />
+                </Link>
+            </Button>
+        </div>
       </section>
 
       <section>
@@ -752,6 +937,7 @@ export default function Home() {
     </div>
   );
 }
+
 ```
 
 ---
@@ -807,15 +993,17 @@ export default function ProductPage({ params }: ProductPageProps) {
 ## File: src/components/footer.tsx
 
 ```tsx
+import Link from 'next/link';
 import NewsletterSignup from './newsletter-signup';
 
 export default function Footer() {
   return (
     <footer className="bg-card border-t mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
+        <div className="grid md:grid-cols-3 gap-8 items-center">
             <NewsletterSignup />
-            <div className="text-center md:text-right">
+            <div className="text-center md:text-right md:col-span-2 space-y-2">
+                <Link href="/contact" className="text-sm text-muted-foreground hover:text-primary">Contact Us</Link>
                  <p className="text-sm text-muted-foreground">
                     © {new Date().getFullYear()} StyleNest. All Rights Reserved.
                 </p>
@@ -825,6 +1013,7 @@ export default function Footer() {
     </footer>
   );
 }
+
 ```
 
 ---
@@ -857,7 +1046,7 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="text-2xl font-headline font-bold text-primary">
+            <Link href="/" className="text-2xl font-headline font-bold text-accent-foreground">
               StyleNest
             </Link>
             <nav className="hidden md:flex items-center space-x-4">
@@ -891,7 +1080,7 @@ export default function Header() {
               <Link href="/cart">
                 <ShoppingCart className="h-6 w-6" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-foreground text-background text-xs">
                     {cartItemCount}
                   </span>
                 )}
@@ -904,6 +1093,7 @@ export default function Header() {
     </header>
   );
 }
+
 ```
 
 ---
@@ -1021,7 +1211,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
         <div className="flex items-baseline gap-2">
-          <p className={`text-lg font-bold ${isOnSale ? 'text-destructive' : 'text-primary'}`}>
+          <p className={`text-lg font-bold ${isOnSale ? 'text-destructive' : 'text-primary-foreground'}`}>
             PKR {product.price.toFixed(2)}
           </p>
           {isOnSale && (
@@ -1037,6 +1227,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     </Card>
   );
 }
+
 ```
 
 ---
@@ -1106,7 +1297,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </div>
         <p className="text-lg text-foreground">{product.description}</p>
         <div className="flex items-baseline gap-4">
-          <p className={`text-3xl font-bold ${isOnSale ? 'text-destructive' : 'text-primary'}`}>
+          <p className={`text-3xl font-bold ${isOnSale ? 'text-destructive' : 'text-primary-foreground'}`}>
             PKR {product.price.toFixed(2)}
           </p>
           {isOnSale && (
@@ -1137,6 +1328,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     </div>
   );
 }
+
 ```
 
 ---
@@ -1206,6 +1398,7 @@ export default function StyleSuggestions() {
     </Card>
   );
 }
+
 ```
 
 ---
@@ -3269,7 +3462,7 @@ const MenubarCheckboxItem = React.forwardRef<
   <MenubarPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     checked={checked}
@@ -3292,7 +3485,7 @@ const MenubarRadioItem = React.forwardRef<
   <MenubarPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}
@@ -5221,7 +5414,7 @@ export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
 ```tsx
 'use client';
 
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode, useCallback } from 'react';
 import { type CartItem, type Product } from '@/lib/types';
 
 interface CartContextType {
@@ -5237,7 +5430,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (product: Product, size: string) => {
+  const addToCart = useCallback((product: Product, size: string) => {
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex(
         (item) => item.product.id === product.id && item.size === size
@@ -5251,17 +5444,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return [...prevCart, { product, size, quantity: 1 }];
       }
     });
-  };
+  }, []);
 
-  const removeFromCart = (productId: string, size: string) => {
+  const removeFromCart = useCallback((productId: string, size: string) => {
     setCart((prevCart) =>
       prevCart.filter(
         (item) => !(item.product.id === productId && item.size === size)
       )
     );
-  };
+  }, []);
 
-  const updateQuantity = (productId: string, size: string, quantity: number) => {
+  const updateQuantity = useCallback((productId: string, size: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId, size);
       return;
@@ -5273,11 +5466,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
           : item
       )
     );
-  };
+  }, [removeFromCart]);
   
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}>
@@ -5545,7 +5738,7 @@ const products: Product[] = [
     name: 'Classic White Tee',
     price: 2800, // Sale price
     originalPrice: 3500, // Original price
-    image: '/images/classic-white-tee.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     category: 'Tops',
@@ -5554,7 +5747,7 @@ const products: Product[] = [
     id: '2',
     name: 'Vintage Denim Jeans',
     price: 8500,
-    image: '/images/vintage-denim-jeans.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'Perfectly faded vintage-wash denim jeans with a modern slim fit. Comfortable, stylish, and built to last.',
     sizes: ['28', '30', '32', '34', '36'],
     category: 'Bottoms',
@@ -5564,7 +5757,7 @@ const products: Product[] = [
     name: 'Sage Green Hoodie',
     price: 6000, // Sale price
     originalPrice: 7000, // Original price
-    image: '/images/sage-green-hoodie.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'Stay cozy in our signature sage green hoodie. Made from a soft fleece blend, it features a relaxed fit and a minimalist design.',
     sizes: ['S', 'M', 'L', 'XL'],
     category: 'Tops',
@@ -5573,7 +5766,7 @@ const products: Product[] = [
     id: '4',
     name: 'Leather Belt',
     price: 4500,
-    image: '/images/leather-belt.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'A versatile and durable accessory, this genuine leather belt with a classic silver buckle will complete any outfit.',
     sizes: ['One Size'],
     category: 'Accessories',
@@ -5582,7 +5775,7 @@ const products: Product[] = [
     id: '5',
     name: 'Linen Button-Up Shirt',
     price: 6000,
-    image: '/images/linen-button-up.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'Lightweight and breathable, this linen button-up shirt is perfect for warm weather. Available in a natural off-white color.',
     sizes: ['S', 'M', 'L'],
     category: 'Tops',
@@ -5591,7 +5784,7 @@ const products: Product[] = [
     id: '6',
     name: 'Black Chino Shorts',
     price: 5000,
-    image: '/images/black-chino-shorts.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'Smart and comfortable, these black chino shorts are a summer essential. Tailored for a clean, modern look.',
     sizes: ['28', '30', '32', '34'],
     category: 'Bottoms',
@@ -5601,7 +5794,7 @@ const products: Product[] = [
     name: 'Canvas Tote Bag',
     price: 2500, // Sale price
     originalPrice: 3000, // Original price
-    image: '/images/canvas-tote-bag.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'A sturdy and stylish canvas tote bag, perfect for daily use. Features our subtle "StyleNest" logo.',
     sizes: ['One Size'],
     category: 'Accessories',
@@ -5610,7 +5803,7 @@ const products: Product[] = [
     id: '8',
     name: 'Crewneck Sweatshirt',
     price: 6500,
-    image: '/images/crewneck-sweatshirt.png',
+    image: 'https://placehold.co/600x600.png',
     description: 'A classic dark grey crewneck sweatshirt. The perfect layering piece for any season, offering both warmth and style.',
     sizes: ['S', 'M', 'L', 'XL'],
     category: 'Tops',
@@ -5619,7 +5812,8 @@ const products: Product[] = [
 
 export const getProducts = (categorySlug?: string): Product[] => {
   if (categorySlug && categorySlug !== 'all') {
-    return products.filter(p => p.category.toLowerCase() === categorySlug);
+    const categoryName = getCategoryBySlug(categorySlug)?.name;
+    return products.filter(p => p.category === categoryName);
   }
   return products;
 };
@@ -5664,6 +5858,7 @@ export type Category = {
   name:string;
   slug: string;
 };
+
 ```
 
 ---
