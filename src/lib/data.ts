@@ -13,7 +13,7 @@ const products: Product[] = [
     name: 'Classic White Tee',
     price: 2800, // Sale price
     originalPrice: 3500, // Original price
-    image: 'https://placehold.co/600x600.png',
+    image: 'public/images/Screenshot_20240406_212749.jpg',
     description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     category: 'Tops',
