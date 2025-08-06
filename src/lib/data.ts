@@ -30,7 +30,7 @@ const products: Product[] = [
   {
     id: '3',
     name: 'Sage Green Hoodie',
-    price: 6000, // Sale price
+    price: 5000, // Sale price
     originalPrice: 7000, // Original price
     image: 'https://placehold.co/600x600.png',
     description: 'Stay cozy in our signature sage green hoodie. Made from a soft fleece blend, it features a relaxed fit and a minimalist design.',
@@ -49,7 +49,7 @@ const products: Product[] = [
   {
     id: '5',
     name: 'Linen Button-Up Shirt',
-    price: 6000,
+    price: 5000,
     image: 'https://placehold.co/600x600.png',
     description: 'Lightweight and breathable, this linen button-up shirt is perfect for warm weather. Available in a natural off-white color.',
     sizes: ['S', 'M', 'L'],
