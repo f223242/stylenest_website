@@ -22,7 +22,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               alt={product.name}
               fill
               className="object-cover"
-              data-ai-hint={`${product.category} ${product.name.split(' ').slice(0,1).join(' ')}`}
+              data-ai-hint={`${product.category} ${product.name.split(' ')[0]}`}
             />
             {isOnSale && (
               <Badge variant="destructive" className="absolute top-2 right-2">
@@ -32,14 +32,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </Link>
       </CardHeader>
+
       <CardContent className="p-4 flex-grow">
         <CardTitle className="text-lg font-body font-bold mb-2">
           <Link href={`/products/${product.id}`}>{product.name}</Link>
         </CardTitle>
         <p className="text-muted-foreground text-sm">{product.category}</p>
       </CardContent>
-      <CardFooter className="p-4 pt-0 flex justify-between items-center">
-        <div className="flex items-baseline gap-2">
+
+      <CardFooter className="p-4 pt-0 flex flex-col gap-2">
+        <div className="flex items-baseline gap-2 self-start">
           <p className={`text-lg font-bold ${isOnSale ? 'text-destructive' : 'text-primary-foreground'}`}>
             PKR {product.price.toFixed(2)}
           </p>
@@ -49,9 +51,22 @@ export default function ProductCard({ product }: ProductCardProps) {
             </p>
           )}
         </div>
-        <Button asChild variant="secondary">
-          <Link href={`/products/${product.id}`}>View Details</Link>
-        </Button>
+
+        <div className="flex gap-2 w-full justify-between">
+          <Button asChild variant="secondary">
+            <Link href={`/products/${product.id}`}>View Details</Link>
+          </Button>
+
+          {/* ✅ WhatsApp Order Button */}
+          <Link
+            href={`https://wa.me/923110324007?text=Hi, I want to order the ${encodeURIComponent(product.name)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition"
+          >
+            Order on WhatsApp
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   );
