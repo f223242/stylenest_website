@@ -13,7 +13,7 @@ const products: Product[] = [
     name: 'Classic White Tee',
     price: 2800, // Sale price
     originalPrice: 3500, // Original price
-    image: 'public/images/Screenshot_20240406_21274.jpg',
+    image: '/images/Screenshot_20240406_21274.jpg',
     description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     category: 'Tops',
@@ -22,7 +22,7 @@ const products: Product[] = [
     id: '2',
     name: 'Vintage Denim Jeans',
     price: 8500,
-    image: 'public/images/1.png',
+    image: '/images/1.png',
     description: 'Perfectly faded vintage-wash denim jeans with a modern slim fit. Comfortable, stylish, and built to last.',
     sizes: ['28', '30', '32', '34', '36'],
     category: 'Bottoms',
@@ -32,7 +32,7 @@ const products: Product[] = [
     name: 'Sage Green Hoodie',
     price: 5000, // Sale price
     originalPrice: 7000, // Original price
-    image: 'public/images/2.png',
+    image: '/images/2.png',
     description: 'Stay cozy in our signature sage green hoodie. Made from a soft fleece blend, it features a relaxed fit and a minimalist design.',
     sizes: ['S', 'M', 'L', 'XL'],
     category: 'Tops',
@@ -41,7 +41,7 @@ const products: Product[] = [
     id: '4',
     name: 'Leather Belt',
     price: 4500,
-    image: 'public/images/3.png',
+    image: '/images/3.png',
     description: 'A versatile and durable accessory, this genuine leather belt with a classic silver buckle will complete any outfit.',
     sizes: ['One Size'],
     category: 'Accessories',
@@ -50,7 +50,7 @@ const products: Product[] = [
     id: '5',
     name: 'Linen Button-Up Shirt',
     price: 5000,
-    image: 'public/images/4.png',
+    image: '/images/4.png',
     description: 'Lightweight and breathable, this linen button-up shirt is perfect for warm weather. Available in a natural off-white color.',
     sizes: ['S', 'M', 'L'],
     category: 'Tops',
