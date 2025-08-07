@@ -1,13 +1,11 @@
 'use client';
 
-import React from 'react';
-
 export default function OrderForm() {
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow">
       <h1 className="text-2xl font-bold mb-4 text-center">Place Your Order</h1>
       <form
-        action="https://formbold.com/s/oY5Ob" // ✅ Replace with your form URL
+        action="https://formbold.com/s/6rXnb"
         method="POST"
         className="space-y-4"
       >
@@ -22,10 +20,10 @@ export default function OrderForm() {
         </div>
 
         <div>
-          <label className="block font-medium">Email</label>
+          <label className="block font-medium">Phone Number</label>
           <input
-            type="email"
-            name="email"
+            type="tel"
+            name="phone"
             required
             className="w-full p-2 border rounded"
           />
@@ -34,7 +32,7 @@ export default function OrderForm() {
         <div>
           <label className="block font-medium">Order Details</label>
           <textarea
-            name="order"
+            name="order_details"
             required
             className="w-full p-2 border rounded"
           />
