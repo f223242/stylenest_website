@@ -2,10 +2,13 @@ import { type Product, type Category } from './types';
 
 const categories: Category[] = [
   { name: 'All', slug: 'all' },
-  { name: 'Tops', slug: 'tops' },
-  { name: 'Bottoms', slug: 'bottoms' },
-  { name: 'Accessories', slug: 'accessories' },
+  { name: 'Shirts', slug: 'shirts' },
+  { name: 'Pants', slug: 'pants' },
+  { name: 'Addons', slug: 'addons' },
+  { name: 'Shoes', slug: 'shoes' },
+  { name: 'Sale', slug: 'sale' },
 ];
+
 
 const products: Product[] = [
   {
