@@ -28,7 +28,7 @@ const products: Product[] = [
     image: '/images/1.jpg',
     description: 'Perfectly faded vintage-wash denim jeans with a modern slim fit. Comfortable, stylish, and built to last.',
     sizes: ['28', '30', '32', '34', '36'],
-    category: 'Bottoms',
+    category: 'Shirts',
   },
   {
     id: '3',
@@ -38,7 +38,7 @@ const products: Product[] = [
     image: '/images/2.jpg',
     description: 'Stay cozy in our signature sage green hoodie. Made from a soft fleece blend, it features a relaxed fit and a minimalist design.',
     sizes: ['S', 'M', 'L', 'XL'],
-    category: 'Tops',
+    category: 'Sale',
   },
   {
     id: '4',
@@ -47,7 +47,7 @@ const products: Product[] = [
     image: '/images/3.jpg',
     description: 'A versatile and durable accessory, this genuine leather belt with a classic silver buckle will complete any outfit.',
     sizes: ['One Size'],
-    category: 'Accessories',
+    category: 'Pants',
   },
   {
     id: '5',
@@ -56,7 +56,7 @@ const products: Product[] = [
     image: '/images/4.jpg',
     description: 'Lightweight and breathable, this linen button-up shirt is perfect for warm weather. Available in a natural off-white color.',
     sizes: ['S', 'M', 'L'],
-    category: 'Tops',
+    category: 'Pants',
   },
   {
     id: '6',
@@ -65,7 +65,7 @@ const products: Product[] = [
     image: 'https://placehold.co/600x600.png',
     description: 'Smart and comfortable, these black chino shorts are a summer essential. Tailored for a clean, modern look.',
     sizes: ['28', '30', '32', '34'],
-    category: 'Bottoms',
+    category: 'Pants',
   },
   {
     id: '7',
@@ -75,7 +75,7 @@ const products: Product[] = [
     image: 'https://placehold.co/600x600.png',
     description: 'A sturdy and stylish canvas tote bag, perfect for daily use. Features our subtle "StyleNest" logo.',
     sizes: ['One Size'],
-    category: 'Accessories',
+    category: 'Addons',
   },
   {
     id: '8',
@@ -84,7 +84,7 @@ const products: Product[] = [
     image: 'https://placehold.co/600x600.png',
     description: 'A classic dark grey crewneck sweatshirt. The perfect layering piece for any season, offering both warmth and style.',
     sizes: ['S', 'M', 'L', 'XL'],
-    category: 'Tops',
+    category: 'Addons',
   },
 ];
 
