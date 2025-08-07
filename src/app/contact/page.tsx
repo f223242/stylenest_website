@@ -17,8 +17,8 @@ export default function ContactPage() {
             <Mail className="w-8 h-8 text-primary" />
             <div>
               <h3 className="text-lg font-semibold">Email</h3>
-              <a href="mailto:zubairyaqoob097@gmail.com" className="text-muted-foreground hover:underline">
-                zubairyaqoob097@gmail.com
+              <a href="mailto:zyaqoob825@gmail.com" className="text-muted-foreground hover:underline">
+                zyaqoob825@gmail.com
               </a>
               <p className="text-sm text-muted-foreground">We'll get back to you within 24 hours.</p>
             </div>
@@ -27,8 +27,8 @@ export default function ContactPage() {
             <Phone className="w-8 h-8 text-primary" />
             <div>
               <h3 className="text-lg font-semibold">Phone</h3>
-              <a href="tel:+923110324007" className="text-muted-foreground hover:underline">
-                +92 311 0324007
+              <a href="tel:+923296470643" className="text-muted-foreground hover:underline">
+               +923296470643
               </a>
               <p className="text-sm text-muted-foreground">Mon - Fri, 9am - 5pm</p>
             </div>
