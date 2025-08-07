@@ -1,42 +1,47 @@
+'use client';
+
 export default function OrderPage() {
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
-      <h2 className="text-2xl font-bold mb-4 text-center">Place Your Order</h2>
+    <div className="max-w-xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Place an Order</h1>
+
       <form
         action="https://formbold.com/s/oY5Ob"
         method="POST"
-        className="space-y-4"
+        className="space-y-4 bg-white shadow p-6 rounded-xl"
       >
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          required
-          className="w-full border border-gray-300 p-2 rounded"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          required
-          className="w-full border border-gray-300 p-2 rounded"
-        />
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone Number"
-          required
-          className="w-full border border-gray-300 p-2 rounded"
-        />
-        <textarea
-          name="message"
-          placeholder="Order Details (Product, Size, etc.)"
-          required
-          className="w-full border border-gray-300 p-2 rounded"
-        ></textarea>
+        <div>
+          <label className="block font-semibold mb-1">Name</label>
+          <input
+            type="text"
+            name="name"
+            required
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            required
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Order Details</label>
+          <textarea
+            name="order"
+            required
+            className="w-full border p-2 rounded"
+          ></textarea>
+        </div>
+
         <button
           type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Submit Order
         </button>
