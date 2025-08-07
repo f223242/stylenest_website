@@ -19,7 +19,7 @@ const products: Product[] = [
     image: '/images/Screenshot_20240406_21274.jpg',
     description: 'A timeless wardrobe staple, this classic white tee is made from 100% premium cotton for ultimate comfort and a perfect fit.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    category: 'Tops',
+    category: 'Shirts',
   },
   {
     id: '2',
