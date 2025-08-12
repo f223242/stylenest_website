@@ -19,7 +19,7 @@ export default function CheckoutSuccessPage() {
       <CheckCircle className="w-24 h-24 text-green-500 mb-6" />
       <h1 className="text-4xl font-bold mb-4">Thank You!</h1>
       <p className="text-lg text-muted-foreground max-w-md mb-8">
-        Please complete sending the email to place your order. We will process it as soon as we receive it.
+        Thank you! Your order is confirmed and will be delivered soon
       </p>
       <Button asChild size="lg">
         <Link href="/category/all">Continue Shopping</Link>
