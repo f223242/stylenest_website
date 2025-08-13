@@ -49,7 +49,7 @@ export default function CheckoutPage() {
     }
 
     // IMPORTANT: Replace this with your actual email address
-    const recipientEmail = "your-email@example.com"; 
+    const recipientEmail = "zubairyaqoob097@gmail.com"; 
     const subject = "New Order from StyleNest";
     
     const cartDetails = cart.map(item => 
